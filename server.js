@@ -67,7 +67,7 @@ app.post('/event', (req, res) => {
     const ev = { 
         title: req.body.title, 
         description: req.body.description,
-        id : mockEvents.events.length + 1
+        id : getEvents.length + 1
      }
 // this will create the Events collection if it does not exist
     firestore.collection("Events").add(ev).then(ret => {
@@ -82,7 +82,12 @@ function getEvents(req, res) {
             if (!snapshot.empty) {
                 const ret = { events: []};
                 snapshot.docs.forEach(element => {
-                    ret.events.push(element.data());
+                //get data
+                const el = element.data();
+                //get internal firestore id and assign to object
+                el.id = element.id;
+                //add object to array
+                ret.events.push(element.data());
                 }, this);
                 console.log(ret);
                 res.json(ret);
